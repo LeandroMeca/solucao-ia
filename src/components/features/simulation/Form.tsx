@@ -1,17 +1,37 @@
 import { PiggyBank } from 'lucide-react';
 import { FormStep } from './FormStep';
 import { StepProgress } from './Progress';
+import { simulationFormSteps } from '@/data/simulation';
+import { useState } from 'react';
 
-export function SimulationForm() {
+export const SimulationForm = () => {
+  const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  const totalSteps = simulationFormSteps.length;
+  const currentStep = simulationFormSteps[currentStepIndex];
+
+  const handleNextStpe = () => {
+    if (currentStepIndex + 1 > totalSteps - 1) return;
+    setCurrentStepIndex((prev) => prev + 1);
+  };
+
+  const handlePreviusStep = () => {
+    if (currentStepIndex === 0) return;
+    setCurrentStepIndex((prev) => prev - 1);
+  };
+
   return (
     <>
-      <StepProgress currentStep={6} totalSteps={100} />
+      <StepProgress
+        currentStep={currentStepIndex + 1}
+        totalSteps={totalSteps}
+      />
       <FormStep
-        icon={PiggyBank}
-        title="Renda mensal bruta"
-        question="Quanto é depositado na sua conta todo mês (somando todas as fontes)?"
-        inputProps={{ type: 'text', placeholder: 'ex 8.000,00', prefix: 'R$' }}
+        key={currentStep.id}
+        {...currentStep}
+        onBack={handlePreviusStep}
+        onNext={handleNextStpe}
+        hideBackButton={currentStepIndex === 0}
       />
     </>
   );
-}
+};
