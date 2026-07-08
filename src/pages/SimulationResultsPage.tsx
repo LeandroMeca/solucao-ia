@@ -1,6 +1,6 @@
 import { Card } from '@/components/features/SimulationResults/Card';
 import { PageHero } from '@/components/shared/PageHero';
-import type { SimulationFormData } from '@/data/simulation';
+import { useSimulationStorage } from '@/hooks/useSimulationStorage';
 import { calcMonthlySavings } from '@/utils/simulation';
 import {
   CalendarClock,
@@ -10,18 +10,16 @@ import {
   PiggyBank,
   Wallet,
 } from 'lucide-react';
-
-const mock: SimulationFormData = {
-  income: 'R$ 5.000,00',
-  expenses: 'R$ 2.000,00',
-  debts: 'R$ 500,00',
-  goalname: 'Viagem para o japão',
-  goalAmount: 'R$ 10.000,00',
-  goalDeadline: '12',
-};
+import { useParams } from 'react-router-dom';
 
 export function SimulationResultsPage() {
-  const data: SimulationFormData = mock;
+  const { id } = useParams<{ id: string }>();
+  const { getFormData } = useSimulationStorage();
+  const data = id ? getFormData(id) : null;
+
+  if (!data) {
+    return <p>Não encontrada.</p>;
+  }
   const monthlySavings = calcMonthlySavings(data);
 
   return (
@@ -47,7 +45,7 @@ export function SimulationResultsPage() {
           variant="primary"
           icon={PiggyBank}
           label="Economia mensal"
-          value={`R$ x'${monthlySavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
+          value={`R$ ${monthlySavings.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
           subtitle={'Valor que você precisa economizar por mês.'}
         />
       </div>
