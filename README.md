@@ -44,7 +44,54 @@ Este projeto é uma iniciativa pessoal para:
 
 ## Começando
 
-_(Espaço reservado: As instruções serão adicionadas assim que uma versão estável e executável estiver pronta para fácil configuração.)_
+Siga estas instruções para configurar e executar o projeto em seu ambiente local.
+
+### Pré-requisitos
+
+-   [Node.js](https://nodejs.org/) (versão 20.x ou superior)
+-   [pnpm](https://pnpm.io/installation)
+
+### Instalação
+
+1.  **Clone o repositório:**
+
+    ```bash
+    git clone https://github.com/seu-usuario/solucaoia.git
+    cd solucaoia
+    ```
+
+    *(Substitua `seu-usuario` pelo nome de usuário correto do GitHub se for o caso.)*
+
+2.  **Instale as dependências:**
+
+    Execute o seguinte comando para instalar todas as dependências do projeto com `pnpm`:
+
+    ```bash
+    pnpm install
+    ```
+
+3.  **Configure as Variáveis de Ambiente:**
+
+    Este projeto utiliza a API do Google Gemini para fornecer insights financeiros com inteligência artificial. Para que a aplicação funcione corretamente, você precisa configurar sua chave de API.
+
+    -   Crie um arquivo chamado `.env` na raiz do projeto.
+    -   Adicione a seguinte linha ao arquivo `.env`, substituindo `SUA_CHAVE_API_AQUI` pela sua chave real do Google Gemini:
+
+    ```
+    VITE_GEMINI_API_KEY=SUA_CHAVE_API_AQUI
+    ```
+
+    > **Nota**: Você pode obter uma chave de API gratuita para o Gemini no [Google AI Studio](https://aistudio.google.com/app/apikey).
+
+### Executando a Aplicação
+
+Após a instalação e configuração, inicie o servidor de desenvolvimento:
+
+```bash
+pnpm dev
+```
+
+A aplicação estará disponível em `http://localhost:5173` (ou em outra porta, se a 5173 estiver em uso).
 
 ## Conecte-se Comigo
 
