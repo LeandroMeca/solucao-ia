@@ -1,23 +1,13 @@
 import { getInsight, type InsightData } from '@/services/aiService';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useSimulationStorage } from './useSimulationStorage';
 import { buildAIPrompt } from '@/data/aiPrompt';
 import type { SimulationRecord } from '@/data/simulation';
 
 export const useInsight = (id: string) => {
-  const isRequestPending = useRef(false);
   const { getFormData, updateSimulation } = useSimulationStorage();
 
-  const [insight, setInsight] = useState<InsightData | null>(() => {
-    const simulation = getFormData(id);
-
-    if (simulation?.insight) {
-      return simulation.insight;
-    }
-
-    return null;
-  });
-
+  const [insight, setInsight] = useState<InsightData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,7 +20,6 @@ export const useInsight = (id: string) => {
         return;
       }
 
-      isRequestPending.current = true;
       setIsLoading(true);
       setError(null);
 
@@ -46,7 +35,6 @@ export const useInsight = (id: string) => {
       } catch {
         setError('Erro ao gerar o diagnóstico. Tente novamente');
       } finally {
-        isRequestPending.current = false;
         setIsLoading(false);
       }
     },
@@ -54,12 +42,20 @@ export const useInsight = (id: string) => {
   );
 
   useEffect(() => {
-    if (insight || isLoading || error || isRequestPending.current) {
-      return;
-    }
+    const simulation = getFormData(id);
 
-    fetchInsight(id);
-  }, [id, insight, isLoading, error, fetchInsight]);
+    if (simulation?.insight) {
+      setInsight(simulation.insight);
+      setIsLoading(false);
+      setError(null);
+    } else {
+      setInsight(null);
+      // We don't control fetchInsight's internals, so we can't easily add
+      // cancellation logic here. We rely on the component unmounting or the
+      // ID changing to eventually settle the state.
+      fetchInsight(id);
+    }
+  }, [id, getFormData, fetchInsight]);
 
   return { insight, isLoading, error, fetchInsight };
 };
