@@ -13,7 +13,7 @@ export const simulationFormSteps = [
   {
     id: 'income',
     icon: PiggyBank,
-    title: 'Renda mensal bruta',
+    title: 'Renda mensal',
     question:
       'Quanto é depositado na sua conta todo mês (somando todas as fontes)?',
     inputProps: {
